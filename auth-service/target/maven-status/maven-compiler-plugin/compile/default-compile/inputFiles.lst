@@ -1,0 +1,13 @@
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\service\AuthenticationService.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\config\JwtAuthenticationFilter.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\dto\AuthResponse.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\entity\Role.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\repository\UserRepository.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\config\ApplicationConfig.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\controller\AuthController.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\AuthServiceApplication.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\config\JwtService.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\config\SecurityConfig.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\dto\RegisterRequest.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\dto\AuthRequest.java
+C:\Users\hp laptop\.gemini\antigravity\scratch\chat-app\auth-service\src\main\java\com\chat\auth\entity\User.java

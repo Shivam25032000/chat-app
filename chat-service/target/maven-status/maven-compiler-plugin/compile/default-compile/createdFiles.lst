@@ -1,0 +1,8 @@
+com\chat\service\controller\ChatController.class
+com\chat\service\repository\ChatMessageRepository.class
+com\chat\service\ChatServiceApplication.class
+com\chat\service\kafka\ChatProducer.class
+com\chat\service\kafka\ChatConsumer.class
+com\chat\service\entity\ChatMessage.class
+com\chat\service\entity\ChatMessage$ChatMessageBuilder.class
+com\chat\service\config\WebSocketConfig.class
