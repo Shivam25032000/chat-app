@@ -47,7 +47,7 @@ graph TD
 ## 🛠️ Tech Stack
 
 *   **Backend**: Java 17, Spring Boot 3, Spring Cloud (Gateway, Eureka)
-*   **Frontend**: Angular 17, Angular Material, RxJS
+*   **Frontend**: Angular 21, Angular Material, RxJS
 *   **Messaging**: Apache Kafka, Zookeeper, STOMP, SockJS
 *   **Database**: PostgreSQL
 *   **Infrastructure**: Docker, Docker Compose
