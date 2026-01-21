@@ -1,30 +1,21 @@
 server:
-  port: 8082
+  port: 8090
 
 spring:
   application:
-    name: chat-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/chat_db
-    username: postgres
-    password: admin@123
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create
+    name: ai-service
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
-      bootstrap-servers: localhost:9092
-      group-id: chat-group
-      auto-offset-reset: earliest
+      group-id: ai-group
+      auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
         spring.json.use.type.headers: false
-        spring.json.value.default.type: "com.chat.service.entity.ChatMessage"
+        spring.json.value.default.type: "com.chat.ai.dto.ChatMessage"
     producer:
-      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
@@ -32,3 +23,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+gemini:
+  api:
+    # key: ${GEMINI_API_KEY:demo-key}
+    key: AIzaSyCsF-p6jxjG4bGQ2y1El3xY9n4nKQQ4vgQ
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=

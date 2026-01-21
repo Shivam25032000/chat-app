@@ -18,8 +18,13 @@ start "API Gateway" cmd /k "cd api-gateway && mvn spring-boot:run"
 echo Starting Auth Service...
 start "Auth Service" cmd /k "cd auth-service && mvn spring-boot:run"
 
+
 echo Starting Chat Service...
 start "Chat Service" cmd /k "cd chat-service && mvn spring-boot:run"
+
+echo Starting AI Service...
+start "AI Service" cmd /k "cd ai-service && mvn spring-boot:run"
+
 
 echo Starting Frontend...
 start "Chat Frontend" cmd /k "cd chat-frontend && ng serve"

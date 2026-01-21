@@ -1,0 +1,5 @@
+com\chat\ai\service\GeminiService.class
+com\chat\ai\AiServiceApplication.class
+com\chat\ai\service\AiConsumer.class
+com\chat\ai\dto\ChatMessage$ChatMessageBuilder.class
+com\chat\ai\dto\ChatMessage.class
