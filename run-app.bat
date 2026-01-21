@@ -1,5 +1,9 @@
+
 @echo off
 echo Starting Chat Application...
+
+
+
 
 echo Starting Infrastructure (Docker)...
 docker-compose up -d

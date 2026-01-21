@@ -27,5 +27,5 @@ eureka:
 gemini:
   api:
     # key: ${GEMINI_API_KEY:demo-key}
-    key: AIzaSyCsF-p6jxjG4bGQ2y1El3xY9n4nKQQ4vgQ
+    key: QUl6YVN5Q3NGLXA2anhqRzRiR1EyeTFFbDN4WTluNG5LUVE0dmdR
     url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=

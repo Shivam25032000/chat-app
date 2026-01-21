@@ -34,8 +34,11 @@ public class GeminiService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
+            // Decode API Key
+            String decodedKey = new String(Base64.getDecoder().decode(apiKey));
+
             // Gemini API Key is passed in the URL, not headers
-            String finalUrl = apiUrl + apiKey;
+            String finalUrl = apiUrl + decodedKey;
 
             // Request Structure: { "contents": [{ "parts": [{"text": "Hello"}] }] }
             Map<String, Object> requestBody = new HashMap<>();
