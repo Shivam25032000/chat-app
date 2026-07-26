@@ -85,7 +85,7 @@ sequenceDiagram
     participant AI as AI Service
     participant Gemini as Gemini 2.5 API
 
-    rect rgb(240, 248, 255)
+    rect rgba(7, 7, 7, 1)
         Note over User, Chat: 👤 Human-to-Human Message Flow
         User->>Gateway: Send Message over WebSocket (STOMP)
         Gateway->>Chat: Forward STOMP Frame
@@ -94,7 +94,7 @@ sequenceDiagram
         Chat->>User: Push Message to Recipient (WebSocket)
     end
 
-    rect rgb(245, 240, 255)
+    rect rgba(0, 0, 0, 1)
         Note over User, Gemini: 🤖 Human-to-AI Message Flow (Recipient: AI_BOT)
         User->>Gateway: Send Message to AI_BOT (WebSocket)
         Gateway->>Chat: Forward STOMP Frame
