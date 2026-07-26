@@ -38,22 +38,58 @@ It features a custom **AI Service** that acts as a "Ghost User" (`AI_BOT`) in th
 
 ```mermaid
 graph TD
-    Client[Angular Frontend] -->|HTTPS/WSS| Gateway[API Gateway :8080]
-    Gateway -->|Auth-Request| Auth[Auth Service]
-    Gateway -->|WS-Connection| Chat[Chat Service :8082]
-    
-    Auth -->|Persist| DB[(PostgreSQL)]
-    Chat -->|Persist| DB
-    
-    Chat -->|Produce| Kafka[Apache Kafka]
-    Kafka -->|Consume| Chat
-    
-    subgraph "AI System"
-        Kafka -->|"Consume (To: AI_BOT)"| AIService[AI Service]
-        AIService -->|Rest API| Gemini[Google Gemini 2.5]
-        Gemini -->|Response| AIService
-        AIService -->|Reply| Kafka
+    subgraph "Frontend Layer"
+        UserA[Angular Frontend - User A]
+        UserB[Angular Frontend - User B]
     end
+
+    subgraph "Service Registry"
+        Eureka[Discovery Server :8761 / Eureka]
+    end
+
+    subgraph "API Gateway & Security"
+        Gateway[API Gateway :8080]
+        Auth[Auth Service]
+    end
+
+    subgraph "Core Messaging & Persistence"
+        Chat[Chat Service :8082]
+        DB[(PostgreSQL :5432)]
+        Kafka[Apache Kafka Broker]
+    end
+
+    subgraph "AI System"
+        AIService[AI Service]
+        Gemini[Google Gemini 2.5 API]
+    end
+
+    %% Service Registration & Discovery
+    Gateway -.->|"Register & Discover"| Eureka
+    Auth -.->|"Register"| Eureka
+    Chat -.->|"Register"| Eureka
+    AIService -.->|"Register"| Eureka
+
+    %% Flow 1: Authentication
+    UserA -->|"1. Auth Request (/api/auth)"| Gateway
+    Gateway -->|"2. Route Request"| Auth
+    Auth -->|"3. Read/Write User Data"| DB
+
+    %% Flow 2: Human-to-Human Messaging
+    UserA -->|"4. Send Chat Msg (WS/STOMP)"| Gateway
+    Gateway -->|"5. Route WebSocket"| Chat
+    Chat -->|"6. Store Msg"| DB
+    Chat -->|"7. Produce Event"| Kafka
+    Kafka -->|"8. Consume Event"| Chat
+    Chat -->|"9. Push Msg (WS)"| UserB
+
+    %% Flow 3: Human-to-AI Messaging (recipient: AI_BOT)
+    Chat -->|"10. Produce Event (To: AI_BOT)"| Kafka
+    Kafka -->|"11. Consume AI Prompt"| AIService
+    AIService -->|"12. REST API Request"| Gemini
+    Gemini -->|"13. Return Generated Reply"| AIService
+    AIService -->|"14. Produce AI Reply"| Kafka
+    Kafka -->|"15. Consume AI Reply"| Chat
+    Chat -->|"16. Push AI Reply (WS)"| UserA
 ```
 
 ---
