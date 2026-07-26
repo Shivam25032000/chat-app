@@ -49,7 +49,7 @@ graph TD
     Kafka -->|Consume| Chat
     
     subgraph "AI System"
-        Kafka -->|Consume (To: AI_BOT)| AIService[AI Service]
+        Kafka -->|"Consume (To: AI_BOT)"| AIService[AI Service]
         AIService -->|Rest API| Gemini[Google Gemini 2.5]
         Gemini -->|Response| AIService
         AIService -->|Reply| Kafka
