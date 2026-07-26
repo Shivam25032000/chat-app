@@ -36,60 +36,76 @@ It features a custom **AI Service** that acts as a "Ghost User" (`AI_BOT`) in th
 
 ## 🏗️ Architecture
 
+### 1. System Component Overview
+
 ```mermaid
 graph TD
-    subgraph "Frontend Layer"
-        UserA[Angular Frontend - User A]
-        UserB[Angular Frontend - User B]
+    Client[Angular Frontend] -->|HTTPS / WSS| Gateway[API Gateway :8080]
+    
+    subgraph "Microservices"
+        Gateway -->|/api/auth| Auth[Auth Service]
+        Gateway -->|/ws| Chat[Chat Service :8082]
+        AIService[AI Service]
     end
 
-    subgraph "Service Registry"
+    subgraph "Service Discovery"
         Eureka[Discovery Server :8761 / Eureka]
+        Gateway -.-> Eureka
+        Auth -.-> Eureka
+        Chat -.-> Eureka
+        AIService -.-> Eureka
     end
 
-    subgraph "API Gateway & Security"
-        Gateway[API Gateway :8080]
-        Auth[Auth Service]
-    end
-
-    subgraph "Core Messaging & Persistence"
-        Chat[Chat Service :8082]
+    subgraph "Infrastructure & Persistence"
         DB[(PostgreSQL :5432)]
         Kafka[Apache Kafka Broker]
+        Auth --> DB
+        Chat --> DB
+        Chat <-->|"Publish / Consume"| Kafka
+        Kafka <-->|"Publish / Consume"| AIService
     end
 
-    subgraph "AI System"
-        AIService[AI Service]
+    subgraph "External Services"
         Gemini[Google Gemini 2.5 API]
+        AIService -->|"REST API"| Gemini
+    end
+```
+
+---
+
+### 2. End-to-End Request Flows
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as User (Angular)
+    participant Gateway as API Gateway (:8080)
+    participant Chat as Chat Service (:8082)
+    participant Kafka as Apache Kafka
+    participant AI as AI Service
+    participant Gemini as Gemini 2.5 API
+
+    rect rgb(240, 248, 255)
+        Note over User, Chat: 👤 Human-to-Human Message Flow
+        User->>Gateway: Send Message over WebSocket (STOMP)
+        Gateway->>Chat: Forward STOMP Frame
+        Chat->>Kafka: Publish Message Event
+        Kafka->>Chat: Consume Event & Persist DB
+        Chat->>User: Push Message to Recipient (WebSocket)
     end
 
-    %% Service Registration & Discovery
-    Gateway -.->|"Register & Discover"| Eureka
-    Auth -.->|"Register"| Eureka
-    Chat -.->|"Register"| Eureka
-    AIService -.->|"Register"| Eureka
-
-    %% Flow 1: Authentication
-    UserA -->|"1. Auth Request (/api/auth)"| Gateway
-    Gateway -->|"2. Route Request"| Auth
-    Auth -->|"3. Read/Write User Data"| DB
-
-    %% Flow 2: Human-to-Human Messaging
-    UserA -->|"4. Send Chat Msg (WS/STOMP)"| Gateway
-    Gateway -->|"5. Route WebSocket"| Chat
-    Chat -->|"6. Store Msg"| DB
-    Chat -->|"7. Produce Event"| Kafka
-    Kafka -->|"8. Consume Event"| Chat
-    Chat -->|"9. Push Msg (WS)"| UserB
-
-    %% Flow 3: Human-to-AI Messaging (recipient: AI_BOT)
-    Chat -->|"10. Produce Event (To: AI_BOT)"| Kafka
-    Kafka -->|"11. Consume AI Prompt"| AIService
-    AIService -->|"12. REST API Request"| Gemini
-    Gemini -->|"13. Return Generated Reply"| AIService
-    AIService -->|"14. Produce AI Reply"| Kafka
-    Kafka -->|"15. Consume AI Reply"| Chat
-    Chat -->|"16. Push AI Reply (WS)"| UserA
+    rect rgb(245, 240, 255)
+        Note over User, Gemini: 🤖 Human-to-AI Message Flow (Recipient: AI_BOT)
+        User->>Gateway: Send Message to AI_BOT (WebSocket)
+        Gateway->>Chat: Forward STOMP Frame
+        Chat->>Kafka: Publish Event (Topic: chat-topic)
+        Kafka->>AI: Consume Event (Recipient == AI_BOT)
+        AI->>Gemini: Call Gemini REST API with Prompt
+        Gemini-->>AI: Return Generated Response
+        AI->>Kafka: Publish AI Reply Event
+        Kafka->>Chat: Consume AI Reply Event
+        Chat->>User: Push AI Reply to User Screen (WebSocket)
+    end
 ```
 
 ---
